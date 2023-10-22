@@ -1,14 +1,21 @@
 package com.dre.routes
 
+import com.dre.model.UserSession
 import com.dre.model.orderStorage
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 
 fun Route.listOrderRoute() {
-    get("/order") {
-        if (orderStorage.isNotEmpty()) {
-            call.respond(orderStorage)
+    authenticate("auth-session", strategy = AuthenticationStrategy.Required) {
+        get("/order") {
+            val userSession = call.principal<UserSession>()
+            call.sessions.set(userSession?.copy(count = userSession.count + 1))
+            if (orderStorage.isNotEmpty()) {
+                call.respond(orderStorage)
+            }
         }
     }
 }

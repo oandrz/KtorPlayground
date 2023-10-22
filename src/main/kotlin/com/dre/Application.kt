@@ -8,6 +8,7 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    configureSession()
     configureAuthentication()
     configureSerialization()
     configureRouting()

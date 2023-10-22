@@ -14,6 +14,8 @@ fun Application.configureRouting() {
         listOrderRoute()
         getOrderRoute()
         totalizeOrderRoute()
+        signUpRoute()
         loginRouting()
+        logoutRouting()
     }
 }

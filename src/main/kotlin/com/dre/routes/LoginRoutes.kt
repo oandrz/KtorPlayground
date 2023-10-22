@@ -1,9 +1,11 @@
 package com.dre.routes
 
+import com.dre.model.UserSession
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 
 fun Route.loginRouting() {
     authenticate("myauth1", strategy = AuthenticationStrategy.Required) {
@@ -14,7 +16,9 @@ fun Route.loginRouting() {
 
     authenticate("myauth2", strategy = AuthenticationStrategy.Required) {
         post ("/login") {
-            call.respondText("Hello, ${call.principal<UserIdPrincipal>()?.name}")
+            val username = call.principal<UserIdPrincipal>()?.name.toString()
+            call.sessions.set(UserSession(name = username, count = 0))
+            call.respondText("Hello, $username")
         }
     }
 }
