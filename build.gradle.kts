@@ -31,6 +31,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-sessions:$ktor_version")
     implementation("io.ktor:ktor-server-sessions-jvm:2.3.5")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
 //    implementation("io.ktor:ktor-server-auth-jvm:2.3.5")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
