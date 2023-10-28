@@ -71,7 +71,8 @@ fun AuthenticationConfig.setJWTBasedAuthentication(jwtConfig: JwtConfig) {
         )
 
         validate { cred ->
-            if (!cred.payload.getClaim("email").asString().isNullOrEmpty()) {
+            val user = userStorage.find { it.email == cred.payload.getClaim("email").asString() }
+            if (user != null) {
                 JWTPrincipal(cred.payload)
             } else {
                 null
