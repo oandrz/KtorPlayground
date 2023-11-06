@@ -29,11 +29,7 @@ fun Route.loginRouting() {
         }
     }
 
-    val secret = environment?.config?.property("jwt.secret")?.getString()
-    val issuer = environment?.config?.property("jwt.issuer")?.getString()
-    val audience = environment?.config?.property("jwt.audience")?.getString()
-
-    post("/jwt_login") {
+    post("/jwt_login") { context ->
         val userReceive = call.receive<User>()
 
         val email = userStorage.find { it.email == userReceive.email }
@@ -58,14 +54,22 @@ fun Route.loginRouting() {
             }
         }
 
-        val token = JWT.create()
-            .withAudience(audience)
-            .withIssuer(issuer)
-            .withClaim("email", userReceive.email)
-            .withExpiresAt(Date(System.currentTimeMillis() + 60000))
-            .sign(HMAC256(secret))
+        val token = this@loginRouting.environment?.generateJwtToken(userReceive.email)
 
         // one of the way to create json object
         call.respond(hashMapOf("token" to token))
     }
+}
+
+private fun ApplicationEnvironment.generateJwtToken(email: String): String {
+    val secret = config.property("jwt.secret").getString()
+    val issuer = config.property("jwt.issuer").getString()
+    val audience = config.property("jwt.audience").getString()
+
+    return JWT.create()
+        .withAudience(audience)
+        .withIssuer(issuer)
+        .withClaim("email", email)
+        .withExpiresAt(Date(System.currentTimeMillis() + 60000))
+        .sign(HMAC256(secret))
 }

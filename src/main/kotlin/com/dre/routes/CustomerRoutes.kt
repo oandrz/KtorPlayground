@@ -7,13 +7,14 @@ import com.dre.model.orderStorage
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 
 fun Route.customerRouting() {
-    authenticate("auth-session", strategy = AuthenticationStrategy.Required) {
+    authenticate("auth-jwt", strategy = AuthenticationStrategy.Required) {
         route("/customer") {
             get {
                 if (customerStorage.isNotEmpty()) {

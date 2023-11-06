@@ -7,9 +7,8 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 
 fun Route.logoutRouting() {
-    authenticate("auth-session", strategy = AuthenticationStrategy.Required) {
+    authenticate("auth-jwt", strategy = AuthenticationStrategy.Required) {
         get ("/logout") {
-            call.sessions.clear("auth-session")
             call.respondText("Logged out")
         }
     }

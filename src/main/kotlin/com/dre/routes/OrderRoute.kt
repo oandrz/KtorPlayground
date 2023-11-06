@@ -9,7 +9,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 
 fun Route.listOrderRoute() {
-    authenticate("auth-session", strategy = AuthenticationStrategy.Required) {
+    authenticate("auth-jwt", strategy = AuthenticationStrategy.Required) {
         get("/order") {
             val userSession = call.principal<UserSession>()
             call.sessions.set(userSession?.copy(count = userSession.count + 1))
