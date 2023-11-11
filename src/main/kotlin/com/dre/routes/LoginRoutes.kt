@@ -2,6 +2,7 @@ package com.dre.routes
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm.HMAC256
+import com.dre.database.dao
 import com.dre.model.User
 import com.dre.model.UserSession
 import com.dre.model.userStorage
@@ -32,22 +33,13 @@ fun Route.loginRouting() {
     post("/jwt_login") { context ->
         val userReceive = call.receive<User>()
 
-        val email = userStorage.find { it.email == userReceive.email }
-        val pass = userStorage.find { it.pass == userReceive.pass.hashString() }
+        val user = dao.checkUserExist(userReceive.email, userReceive.pass.hashString())
 
         when {
-            email == null -> {
+            user == null -> {
                 val error = hashMapOf(
                     "status_code" to HttpStatusCode.Unauthorized.value.toString(),
-                    "message" to "Email not found"
-                )
-                call.respond(HttpStatusCode.Unauthorized, error)
-                return@post
-            }
-            pass == null -> {
-                val error = hashMapOf(
-                    "status_code" to HttpStatusCode.Unauthorized.value.toString(),
-                    "message" to "Password not found"
+                    "message" to "User not found"
                 )
                 call.respond(HttpStatusCode.Unauthorized, error)
                 return@post

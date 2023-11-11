@@ -1,5 +1,6 @@
 package com.dre
 
+import com.dre.database.DatabaseFactory
 import com.dre.plugins.*
 import io.ktor.server.application.*
 
@@ -8,6 +9,7 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    DatabaseFactory.init()
     configureSession()
     configureAuthentication()
     configureSerialization()
